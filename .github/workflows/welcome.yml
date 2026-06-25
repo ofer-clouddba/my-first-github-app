@@ -1,0 +1,13 @@
+name: App Deployment Notification
+
+# This tells GitHub to run this script every time code is pushed to the repository
+on: [push]
+
+jobs:
+  say-hello:
+    runs-on: ubuntu-latest # GitHub provides a temporary Linux server for free!
+    steps:
+      - name: Run a greeting command
+        run: |
+          echo "Automation triggered successfully!"
+          echo "The current time and build are being tracked."
