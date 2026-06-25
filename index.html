@@ -2,20 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My GitHub App</title>
+    <title>Server Monitor Dashboard</title>
     <style>
-    body { 
-    font-family: sans-serif; 
-    text-align: center; 
-    margin-top: 50px; 
-    background-color: #222; 
-    color: #fff; 
-}
-        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+        body { font-family: monospace; background-color: #121212; color: #00ff00; padding: 20px; }
+        .dashboard { max-width: 600px; margin: 0 auto; border: 1px solid #00ff00; padding: 20px; border-radius: 5px; }
+        .status-box { font-size: 20px; margin: 20px 0; padding: 10px; border-left: 5px solid #00ff00; background: #1a1a1a; }
+        button { background: #00ff00; color: #121212; border: none; padding: 10px 20px; font-family: monospace; font-weight: bold; cursor: pointer; }
+        button:hover { background: #00cc00; }
     </style>
 </head>
 <body>
-    <h1>Hello World! Updated locally from my terminal!</h1>
-    <button onclick="alert('It works!')">Click Me</button>
+
+    <div class="dashboard">
+        <h1>[ SYSTEM MONITOR ]</h1>
+        <hr color="#00ff00">
+        
+        <!-- These empty spans will be populated by JavaScript -->
+        <div class="status-box">
+            OMS Status: <span id="oms-status">CHECKING...</span>
+        </div>
+        
+        <div class="status-box">
+            Session Uptime: <span id="uptime-counter">0</span>s
+        </div>
+
+        <button id="refresh-btn">EXECUTE EMCTL CHECK</button>
+    </div>
+
+    <!-- JavaScript Injection -->
+    <script>
+        // 1. DOM Selection (Like assigning variables to file descriptors)
+        const omsStatusText = document.getElementById('oms-status');
+        const uptimeText = document.getElementById('uptime-counter');
+        const refreshButton = document.getElementById('refresh-btn');
+
+        // 2. State Variables
+        let uptimeSeconds = 0;
+
+        // 3. Counter Logic (Runs an anonymous function every 1000ms)
+        setInterval(() => {
+            uptimeSeconds++;
+            uptimeText.innerText = uptimeSeconds;
+        }, 1000);
+
+        // 4. Event Listener (Like a signal trap or interruption handler)
+        refreshButton.addEventListener('click', () => {
+            omsStatusText.innerText = "RUNNING (emctl status oms)";
+            omsStatusText.style.color = "#00ff00";
+            
+            // Simulate a random server status shift after 3 seconds
+            setTimeout(() => {
+                const statuses = ["RUNNING", "DEGRADED", "DOWN"];
+                // Mathematical trick to pick a random index from the array
+                const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+                
+                omsStatusText.innerText = randomStatus;
+                
+                // Dynamic color alteration based on state
+                if (randomStatus === "DOWN") omsStatusText.style.color = "#ff0000";
+                else if (randomStatus === "DEGRADED") omsStatusText.style.color = "#ffff00";
+                else omsStatusText.style.color = "#00ff00";
+            }, 1500);
+        });
+    </script>
 </body>
 </html>
